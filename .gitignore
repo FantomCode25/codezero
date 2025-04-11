@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules
 .env
 
@@ -17,3 +18,7 @@ backend/.venv
 /coverage.json
 # Hardhat Ignition default folder for deployments against a local node
 ignition/deployments/chain-31337
+=======
+.env
+.DS_Store
+>>>>>>> 2c9c8d2477d9b2a2d2282824ae75e93c7b087162
