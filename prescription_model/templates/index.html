@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Classification and Content Extraction</title>
+    <style>
+        :root {
+            --primary-color: #00a0c6;
+            --primary-light: #39c8eb;
+            --primary-dark: #0078a3;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-color: #1e293b;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+        
+        .container:hover {
+            box-shadow: 0 15px 30px -5px rgba(0, 160, 198, 0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 28px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-light), var(--primary-color), var(--primary-light));
+            border-radius: 3px;
+        }
+        
+        form {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .file-input-container {
+            position: relative;
+            width: 70%;
+            margin-bottom: 20px;
+        }
+        
+        input[type="file"] {
+            position: relative;
+            padding: 15px;
+            width: 100%;
+            border: 2px dashed var(--primary-color);
+            border-radius: var(--border-radius);
+            background-color: rgba(0, 160, 198, 0.05);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 2;
+        }
+        
+        input[type="file"]::file-selector-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        input[type="file"]::file-selector-button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        input[type="file"]:hover {
+            background-color: rgba(0, 160, 198, 0.1);
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .file-upload-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-color);
+            opacity: 0.2;
+            font-size: 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        button {
+            padding: 14px 28px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0, 160, 198, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 160, 198, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        button:hover::after {
+            left: 100%;
+        }
+        
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(248, 250, 252, 0.5);
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            transition: var(--transition);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideIn 0.5s forwards;
+        }
+        
+        @keyframes slideIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .result-section:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 8px rgba(0, 160, 198, 0.1);
+        }
+        
+        .result-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 500;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+        
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            display: block;
+        }
+        
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 160, 198, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .image-container:hover img {
+            transform: scale(1.03);
+        }
+        
+        .image-container:hover .image-overlay {
+            opacity: 1;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #extractedText, #extractedText1 {
+            padding-left: 20px;
+            list-style-type: none;
+        }
+        
+        #extractedText li, #extractedText1 li {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background-color: rgba(0, 160, 198, 0.05);
+            border-radius: 8px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            position: relative;
+            transform: translateX(20px);
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+            animation-delay: calc(var(--item-index) * 0.1s);
+        }
+        
+        @keyframes fadeIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        #extractedText li:hover, #extractedText1 li:hover {
+            background-color: rgba(0, 160, 198, 0.1);
+            border-left-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+        
+        .medicine-link {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            transform: translateX(20px);
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+            animation-delay: 0.5s;
+            box-shadow: 0 4px 6px rgba(0, 160, 198, 0.2);
+        }
+        
+        .medicine-link:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px) translateX(0);
+            box-shadow: 0 6px 12px rgba(0, 160, 198, 0.3);
+        }
+        
+        #weblink {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+        
+        #weblink:hover {
+            color: var(--primary-light);
+            background-color: rgba(0, 160, 198, 0.05);
+        }
+        
+        /* Loading indicator */
+        .loader {
+            display: none;
+            margin: 20px auto;
+            width: 48px;
+            height: 48px;
+            border: 5px solid rgba(0, 160, 198, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Add fallback image style */
+        .image-error {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 14px;
+            border: 1px dashed #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Image for Classification and Content Extraction</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="file-input-container">
+                <input type="file" id="imageInput" name="image" accept="image/*" required />
+                <div class="file-upload-icon">📷</div>
+            </div>
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <button type="button" onclick="uploadImage()">Upload & Process</button>
+        </form>
+        
+        <div class="loader" id="loader"></div>
+
+        <div id="results" class="hidden">
+            <!-- <div class="result-section">
+                <h3>Uploaded Image:</h3>
+                <div class="image-container">
+                    <img id="uploadedImage" src="#" alt="Uploaded Image" />
+                    <div class="image-overlay">Click to enlarge</div>
+                </div>
+            </div> -->
+
+            <div class="result-section">
+                <h3>Classified Image:</h3>
+                <div class="image-container">
+                    <img id="classifiedImage" src="#" alt="Classified Image" />
+                    <div class="image-overlay">Click to enlarge</div>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h3>Extracted Content:</h3>
+                <ul id="extractedText"></ul>
+                <ul id="extractedText1"></ul>
+            </div>
+            <div>
+                <a id="weblink" href="#" target="_blank">Visit Website</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        // Add interactive classes to elements
+        document.getElementById('imageInput').addEventListener('change', function() {
+            if (this.files.length > 0) {
+                showToast('Image selected: ' + this.files[0].name);
+            }
+        });
+        
+        // Add click event for image enlargement
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'IMG' || e.target.className === 'image-overlay') {
+                const img = e.target.tagName === 'IMG' ? e.target : e.target.previousElementSibling;
+                if (img.classList.contains('enlarged')) {
+                    img.classList.remove('enlarged');
+                    img.style.position = '';
+                    img.style.zIndex = '';
+                    img.style.maxWidth = '';
+                    img.style.maxHeight = '';
+                    img.style.objectFit = '';
+                    img.style.top = '';
+                    img.style.left = '';
+                    img.style.transform = '';
+                } else {
+                    img.classList.add('enlarged');
+                    img.style.position = 'fixed';
+                    img.style.zIndex = '1000';
+                    img.style.maxWidth = '90vw';
+                    img.style.maxHeight = '90vh';
+                    img.style.objectFit = 'contain';
+                    img.style.top = '50%';
+                    img.style.left = '50%';
+                    img.style.transform = 'translate(-50%, -50%)';
+                }
+            }
+        });
+        
+        // Close enlarged image when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'IMG' && document.querySelector('.enlarged')) {
+                const img = document.querySelector('.enlarged');
+                img.classList.remove('enlarged');
+                img.style.position = '';
+                img.style.zIndex = '';
+                img.style.maxWidth = '';
+                img.style.maxHeight = '';
+                img.style.objectFit = '';
+                img.style.top = '';
+                img.style.left = '';
+                img.style.transform = '';
+            }
+        });
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Simulate progress during upload
+        function simulateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progressContainer = document.getElementById('progressContainer');
+            let width = 0;
+            
+            progressContainer.style.display = 'block';
+            
+            const interval = setInterval(() => {
+                if (width >= 90) {
+                    clearInterval(interval);
+                } else {
+                    width += 5;
+                    progressBar.style.width = width + '%';
+                }
+            }, 200);
+            
+            return interval;
+        }
+        
+        // Add error handlers for images
+        function setupImageErrorHandlers() {
+            // const uploadedImage = document.getElementById('uploadedImage');
+            // const classifiedImage = document.getElementById('classifiedImage');
+            
+            // if (uploadedImage) {
+            //     uploadedImage.onerror = function() {
+            //         console.error('Failed to load uploaded image');
+            //         this.parentNode.innerHTML = '<div class="image-error">Image failed to load. Check server uploads directory.</div>';
+            //     };
+            // }
+            
+            // if (classifiedImage) {
+            //     classifiedImage.onerror = function() {
+            //         console.error('Failed to load classified image');
+            //         this.parentNode.innerHTML = '<div class="image-error">Image failed to load. Check server configuration.</div>';
+            //     };
+            // }
+        }
+        
+        // Call this function when the page loads
+        setupImageErrorHandlers();
+        
+        // Fix for "Get Low Cost Medicine" link
+        function createMedicineLink(container, url) {
+            const a = document.createElement("a");
+            a.href = url || "#";
+            a.className = "medicine-link";
+            a.textContent = "Get Low Cost Medicine";
+            a.setAttribute("target", "_blank");
+            container.appendChild(a);
+            return a;
+        }
+        
+        function uploadImage() {
+            const formData = new FormData();
+            const fileInput = document.getElementById("imageInput");
+            const loader = document.getElementById("loader");
+            
+            if (!fileInput.files.length) {
+                showToast("Please select an image to upload.");
+                return;
+            }
+            
+            formData.append("image", fileInput.files[0]);
+            
+            // Show loading indicator and progress
+            loader.style.display = 'block';
+            const progressInterval = simulateProgress();
+            
+            // For debugging - add this line
+            console.log("Uploading file:", fileInput.files[0].name);
+            
+            // Reset any previous error states
+            const uploadedImage = document.getElementById('uploadedImage');
+            const classifiedImage = document.getElementById('classifiedImage');
+            
+            if (uploadedImage) {
+                uploadedImage.onerror = function() {
+                    console.error('Failed to load uploaded image');
+                    this.parentNode.innerHTML = '<div class="image-error">Image failed to load. Check server uploads directory.</div>';
+                };
+            }
+            
+            if (classifiedImage) {
+                classifiedImage.onerror = function() {
+                    console.error('Failed to load classified image');
+                    this.parentNode.innerHTML = '<div class="image-error">Image failed to load. Check server configuration.</div>';
+                };
+            }
+            
+            fetch("/", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => {
+                // For debugging - add this line
+                console.log("Response status:", response.status);
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Error processing the image. Status: " + response.status);
+                }
+            })
+            .then(data => {
+                // Hide loading indicator
+                loader.style.display = 'none';
+                document.getElementById('progressContainer').style.display = 'none';
+                clearInterval(progressInterval);
+                
+                // For debugging - add this line
+                console.log("Received data:", data);
+                
+                if (data && data.success) {
+                    // Set image sources with error handling
+                    try {
+                        const uploadedImage = document.getElementById("uploadedImage");
+                        if (uploadedImage && data.uploaded_img) {
+                            uploadedImage.src = `/uploads/${data.uploaded_img}`;
+                            console.log("Setting uploaded image src to:", `/uploads/${data.uploaded_img}`);
+                        } else {
+                            console.error("Element with ID 'uploadedImage' not found or data.uploaded_img is undefined");
+                        }
+                        
+                        const classifiedImage = document.getElementById("classifiedImage");
+                        if (classifiedImage && data.result_img) {
+                            classifiedImage.src = data.result_img;
+                            console.log("Setting classified image src to:", data.result_img);
+                        } else {
+                            console.error("Element with ID 'classifiedImage' not found or data.result_img is undefined");
+                        }
+                    } catch (e) {
+                        console.error("Error setting image sources:", e);
+                    }
+                    
+                    // Process extracted text with error handling
+                    try {
+                        const textList = document.getElementById("extractedText");
+                        if (textList) {
+                            textList.innerHTML = "";
+                            
+                            if (Array.isArray(data.extracted_text)) {
+                                let medicineUrl = "";
+                                
+                                data.extracted_text.forEach((line, index) => {
+                                    // For the last element, create a link instead of a list item
+                                    if (index === data.extracted_text.length - 1 && line.startsWith("http")) {
+                                        medicineUrl = line;
+                                    } else {
+                                        // For all other elements, create list items as before
+                                        const li = document.createElement("li");
+                                        li.textContent = line;
+                                        li.style.setProperty('--item-index', index);
+                                        textList.appendChild(li);
+                                    }
+                                });
+                                
+                                // Create medicine link if we found a URL
+                                if (medicineUrl) {
+                                    const medicineLink = createMedicineLink(textList, medicineUrl);
+                                    medicineLink.onclick = function(e) {
+                                        window.open(medicineUrl, '_blank');
+                                        showToast("Redirecting to medicine portal...");
+                                    };
+                                }
+                            } else {
+                                console.error("data.extracted_text is not an array:", data.extracted_text);
+                                textList.innerHTML = "<li>No text extracted or invalid format</li>";
+                            }
+                        } else {
+                            console.error("Element with ID 'extractedText' not found");
+                        }
+                    } catch (e) {
+                        console.error("Error processing extracted text:", e);
+                    }
+                    
+                    // Set weblink with proper redirection
+                    try {
+                        const weblink = document.getElementById("weblink");
+                        if (weblink && data.link) {
+                            weblink.href = data.link;
+                            weblink.textContent = "Visit Website";
+                            weblink.setAttribute("target", "_blank");
+                            weblink.onclick = function(e) {
+                                if (!data.link.startsWith('http')) {
+                                    e.preventDefault();
+                                    window.open('http://' + data.link, '_blank');
+                                    showToast("Opening website in new tab...");
+                                } else {
+                                    showToast("Opening website in new tab...");
+                                }
+                            };
+                            console.log("Setting weblink href to:", data.link);
+                        } else {
+                            console.log("Element with ID 'weblink' not found or data.link is undefined");
+                        }
+                    } catch (e) {
+                        console.error("Error setting weblink:", e);
+                    }
+                    
+                    // Show results section
+                    const resultsSection = document.getElementById("results");
+                    if (resultsSection) {
+                        resultsSection.classList.remove("hidden");
+                    } else {
+                        console.error("Element with ID 'results' not found");
+                    }
+                    
+                    showToast("Processing complete!");
+                } else {
+                    showToast("Error: " + (data && data.error ? data.error : "Unknown error occurred"));
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                loader.style.display = 'none';
+                document.getElementById('progressContainer').style.display = 'none';
+                clearInterval(progressInterval);
+                showToast("An error occurred while processing the image: " + error.message);
+            });
+        }
+    </script>
+</body>
+</html>
