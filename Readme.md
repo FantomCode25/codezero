@@ -8,13 +8,13 @@
 
 ## 📖 Table of Contents
 
-1. [Introduction](#-introduction)
-2. [Problem Statement](#-problem-statement)
-3. [Solution Overview](#-solution-overview)
-4. [Tech Stack](#-tech-stack)
-5. [Architecture / Diagram (if any)](#-architecture--diagram-if-any)
-6. [Installation & Usage](#-installation--usage)
-7. [Team Members](#-team-members)
+1. 🙏[Introduction](#-introduction)
+2. ❓[Problem Statement](#-problem-statement)
+3. 💡[Solution Overview](#-solution-overview)
+4. ⚙️[Tech Stack](#-tech-stack)
+5. 🔧[Architecture / Diagram (if any)](#-architecture--diagram-if-any)
+6. 📄[Installation & Usage](#-installation--usage)
+7. 👨‍💻[Team Members](#-team-members)
 
 ---
 
