@@ -8,13 +8,13 @@
 
 ## 📖 Table of Contents
 
-1. 🙏[Introduction](#-introduction)
-2. ❓[Problem Statement](#-problem-statement)
-3. 💡[Solution Overview](#-solution-overview)
-4. ⚙️[Tech Stack](#-tech-stack)
-5. 🔧[Architecture / Diagram](#-architecture--diagram-if-any)
-6. 📄[Installation & Usage](#-installation--usage)
-7. 👨‍💻[Team Members](#-team-members)
+1. [Introduction](#-introduction)
+2. [Problem Statement](#-problem-statement)
+3. [Solution Overview](#-solution-overview)
+4. [Tech Stack](#-tech-stack)
+5. [Architecture / Diagram (if any)](#-architecture--diagram-if-any)
+6. [Installation & Usage](#-installation--usage)
+7. [Team Members](#-team-members)
 
 ---
 
@@ -39,11 +39,11 @@ Lives are lost not due to lack of care, but due to lack of information.
 
 In today’s digital age, why is our most critical health data still locked away in silos, delayed by red tape, or simply inaccessible in emergencies? Why can't hospitals, doctors, and first responders access the right information at the right time—with your privacy still intact?
 
-There’s a glaring gap in our healthcare system:
-⛔ No real-time access to medical data during emergencies
-⛔ Poor data interoperability between hospitals
-⛔ No automated alert mechanism when accidents happen
-⛔ Privacy concerns with centralized health records
+There’s a glaring gap in our healthcare system:  
+⛔ No real-time access to medical data during emergencies  
+⛔ Poor data interoperability between hospitals  
+⛔ No automated alert mechanism when accidents happen  
+⛔ Privacy concerns with centralized health records  
 
 ---
 
@@ -70,21 +70,18 @@ A powerful, user-friendly app that allows users to:
 ### 📍 3. Real-Time Hospital Alert System
 Nearest hospitals receive automated alerts with location and basic medical details, enabling faster and better-prepared emergency response.
 
-### 🔐 4. Blockchain-Based Medical Records (Hyperledger Fabric)
+### 🔐 4. Blockchain-Based Medical Records (Ethereum Sepolia).
 - Tamper-proof and decentralized
-
-- QR-based patient identity
 
 - Access control with full patient privacy
 
-- Doctors can securely update diagnoses
+- Hospitals can securely update diagnoses
 
 🌟 Additional Key Features:
 ### 🤖 5. Virtual Doctor (AI Chatbot)
 An intelligent chatbot available 24/7 that assists with:
-
+- Personalized health insights
 - Symptom checks
-
 - Health advice
 
 Next steps and basic triage Your AI-powered health buddy, always on call.
@@ -109,11 +106,10 @@ Get guidance from verified mental health professionals No stigma, just support.
 ### 💊 8. Smart Prescription Model
 Doctors can:
 
-- Generate digital prescriptions
+- Scan handwritten prescriptions  
 
-- Auto-link medications to pharmacy APIs
+- Fetch the lowest medicine prices  
 
-- Track patient adherence Patients get e-prescriptions, reminders, and dosage info in the app.
 
 ### 💸 9. Automated Insurance Claim System
 When an emergency is logged or treatment is added:
@@ -122,7 +118,6 @@ When an emergency is logged or treatment is added:
 
 - Notifies the insurance provider
 
-- Tracks claim progress—all without user intervention
 
 
 ---
@@ -135,14 +130,24 @@ When an emergency is logged or treatment is added:
 - **APIs / Libraries:** Groq, Google Maps API, TensorFlow, Youtube API, Twilio, SMTP, Web3.js  
 - **Tools:** Docker, ngrok, Github Actions, AWS, celery, Pinata cloud, Sepolia Testnet 
 
-![ArogyaKhosh Demo](https://i.postimg.cc/4NdzyfM9/Whats-App-Image-2025-04-12-at-06-56-04-73a37029.jpg)
+<p align="center">
+  <img src="https://i.postimg.cc/4NdzyfM9/Whats-App-Image-2025-04-12-at-06-56-04-73a37029.jpg" alt="ArogyaKhosh Demo" />
+</p>
+
 
 
 ---
 
 ## 🧩 Architecture / Diagram 
 
-![ArogyaKhosh Demo](https://i.postimg.cc/2ydnW3YQ/Whats-App-Image-2025-04-12-at-06-52-46-119ded72.jpg)
+![ArogyaKhosh Demo](https://i.postimg.cc/2ydnW3YQ/Whats-App-Image-2025-04-12-at-06-52-46-119ded72.jpg)  
+
+---
+## 🕒 Real Time Example
+
+<p align="center">
+  <img src="https://i.postimg.cc/VNVN7wg3/Whats-App-Image-2025-04-12-at-08-10-47-9d34b673.jpg" alt="ArogyaKhosh Demo" width="800"/>
+</p>
 
 
 ---
@@ -153,6 +158,18 @@ When an emergency is logged or treatment is added:
 
 - Node.js / Python / 
 - Dependencies listed in `package.json` and `requirements.txt`
+  
+---
+---
+
+### 👥 Team Members
+
+- 🤖 **Ritvik** – AI & ML (Machine whisperer 🤖📊)
+- 🔗 **Sathwik Shetty** – Blockchain & Backend (Chain crafter 🔐⚙️)
+- 🎨 **Abhhinav Shrimali** – Frontend (Pixel perfecter 🎨💻)
+- 🧩 **Anjana U** – Fullstack (Code connector 🧠🌐)
+
+---
 
 ### Steps
 
@@ -176,7 +193,9 @@ python manage.py migrate
 # Start the development server
 python manage.py runserver
 
-_Include system architecture, data flow diagrams, or UI wireframes if available._
 
-> 📌 **Tip:** You can add an image like this:
+
+
+
+
 
