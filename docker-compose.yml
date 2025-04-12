@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - flask-backend
+      - node-backend
+      - django-backend
+    environment:
+      - REACT_APP_FLASK_API=http://localhost:5000
+      - REACT_APP_NODE_API=http://localhost:4000
+      - REACT_APP_DJANGO_API=http://localhost:8000
+
+  flask-backend:
+    build: ./flask-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+
+  node-backend:
+    build: ./node-backend
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+
+  django-backend:
+    build: ./django-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_ENV=development
+    volumes:
+      - ./django-backend:/app
