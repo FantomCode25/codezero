@@ -1178,6 +1178,7 @@ class create_accident(APIView):
         try:
             patd = patient.objects.get(id=patid)
         except:
+            print("Patient not found")
             return Response({'error' : 'Patient not found '},status=status.HTTP_404_NOT_FOUND)
         accident.objects.create(
                 user = patd,
