@@ -160,16 +160,7 @@ When an emergency is logged or treatment is added:
 - Dependencies listed in `package.json` and `requirements.txt`
   
 ---
----
 
-### 👥 Team Members
-
-- 🤖 **Ritvik** – AI & ML (Machine whisperer 🤖📊)
-- 🔗 **Sathwik Shetty** – Blockchain & Backend (Chain crafter 🔐⚙️)
-- 🎨 **Abhhinav Shrimali** – Frontend (Pixel perfecter 🎨💻)
-- 🧩 **Anjana U** – Fullstack (Code connector 🧠🌐)
-
----
 
 ### Steps
 
@@ -192,8 +183,16 @@ python manage.py makemigrations
 python manage.py migrate
 # Start the development server
 python manage.py runserver
+```
+---
 
 
+### 👥 Team Members
+
+- 🤖 **Ritvik** – AI & ML (Machine whisperer 🤖📊)
+- 🔗 **Sathwik Shetty** – Blockchain & Backend (Chain crafter 🔐⚙️)
+- 🎨 **Abhhinav Shrimali** – Frontend (Pixel perfecter 🎨💻)
+- 🧩 **Anjana U** – Fullstack (Code connector 🧠🌐)
 
 
 
